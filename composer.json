@@ -1,0 +1,25 @@
+{
+	"name": "frosty22/ratchet",
+	"type": "library",
+	"description": "Library for Ratchet IO server with Nette",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Vít Ledvinka",
+			"homepage": "http://www.frosty22.cz"
+		}
+	],
+	"require": {
+		"php": ">= 5.3.9",
+		"nette/nette": "2.*",
+		"cboden/Ratchet": "0.3.*"
+	},
+	"autoload": {
+		"psr-0": {
+			"Ale\\Ratchet" : "src/Ale/Ratchet"
+		},
+		"classmap": [
+			"src/Ale/Ratchet/exceptions.php"
+		]
+	}
+}
