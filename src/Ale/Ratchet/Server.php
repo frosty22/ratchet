@@ -8,7 +8,7 @@ use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 
 /**
- * Ratchet server for Nette
+ * Ratchet server for Nette - run instead of Nette application.
  *
  * @copyright Copyright (c) 2013 Ledvinka Vít
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
@@ -37,8 +37,8 @@ class Server extends \Nette\Object {
 
 	/**
 	 * @param Application $application
-	 * @param string $server
-	 * @param int $port
+	 * @param string $server The address to receive sockets on (0.0.0.0 means receive connections from any)
+	 * @param int $port The port to server sockets on
 	 */
 	public function __construct(Application $application, $server, $port)
 	{

@@ -6,6 +6,8 @@ use Nette\Config\CompilerExtension;
 
 /**
  *
+ * Install ratchet server and other components to container.
+ *
  * @copyright Copyright (c) 2013 Ledvinka Vít
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
  *

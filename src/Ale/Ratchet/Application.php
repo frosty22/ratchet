@@ -10,6 +10,9 @@ use Ratchet\ConnectionInterface;
 
 /**
  *
+ * Application which run on server and provide creating controllers
+ * with correctly params - convert message => control.
+ *
  * @copyright Copyright (c) 2013 Ledvinka Vít
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
  *
@@ -85,6 +88,12 @@ class Application extends \Nette\Object implements MessageComponentInterface {
 	}
 
 
+	/**
+	 * @param ConnectionInterface $from
+	 * @param string $msg
+	 * @throws BadRequestException
+	 * @throws InvalidArgumentException
+	 */
 	public function onMessage(ConnectionInterface $from, $msg)
 	{
 		$request = $this->router->match($msg);
