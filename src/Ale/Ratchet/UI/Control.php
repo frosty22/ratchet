@@ -3,6 +3,7 @@
 namespace Ale\Ratchet\UI;
 
 use Ale\Ratchet\ConnectionStorage;
+use Ale\Ratchet\Response\IResponse;
 
 /**
  *
@@ -34,6 +35,16 @@ abstract class Control extends \Nette\Object {
 	public function getConnectionStorage()
 	{
 		return $this->connectionStorage;
+	}
+
+
+	/**
+	 * This send response
+	 * @param IResponse $response
+	 */
+	public function send(IResponse $response)
+	{
+		// TODO: nějak pořešit cílovou skupinu
 	}
 
 

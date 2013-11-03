@@ -2,9 +2,12 @@
 
 namespace Ale\Ratchet;
 
+use Ale\Ratchet\Response\IResponse;
 use Ratchet\ConnectionInterface;
 
 /**
+ *
+ * Storage for manage all connections.
  *
  * @copyright Copyright (c) 2013 Ledvinka Vít
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
@@ -75,5 +78,19 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 		return $this->clients;
 	}
 
+
+	/**
+	 * Send response to the all connections
+	 * @param IResponse $response
+	 */
+	public function sendAll(IResponse $response)
+	{
+		$res = $response->create();
+
+		foreach ($this->clients as $client) {
+			/** @var ConnectionInterface $client */
+			$client->send($res);
+		}
+	}
 
 }
