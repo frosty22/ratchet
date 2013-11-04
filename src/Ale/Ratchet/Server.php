@@ -3,9 +3,7 @@
 namespace Ale\Ratchet;
 
 use Nette\ComponentModel\Container;
-use Ratchet\Http\HttpServer;
-use Ratchet\Server\IoServer;
-use Ratchet\WebSocket\WsServer;
+use React\EventLoop\LoopInterface;
 
 /**
  * Ratchet server for Nette - run instead of Nette application.
@@ -36,15 +34,23 @@ class Server extends \Nette\Object {
 
 
 	/**
+	 * @var LoopInterface
+	 */
+	private $loop;
+
+
+	/**
 	 * @param Application $application
+	 * @param LoopInterface $loop
 	 * @param string $server The address to receive sockets on (0.0.0.0 means receive connections from any)
 	 * @param int $port The port to server sockets on
 	 */
-	public function __construct(Application $application, $server, $port)
+	public function __construct(Application $application, LoopInterface $loop, $server, $port)
 	{
 		$this->application = $application;
 		$this->server = $server;
 		$this->port = $port;
+		$this->loop = $loop;
 	}
 
 
@@ -53,10 +59,13 @@ class Server extends \Nette\Object {
 	 */
 	public function run()
 	{
-		$wsServer = new WsServer($this->application);
-		$httpServer = new HttpServer($wsServer);
+		$wsServer = new \Ratchet\WebSocket\WsServer($this->application);
+		$httpServer = new \Ratchet\Http\HttpServer($wsServer);
 
-		$server = IoServer::factory($httpServer, $this->port, $this->server);
+		$socket = new \React\Socket\Server($this->loop);
+		$socket->listen($this->port, $this->server);
+
+		$server = new \Ratchet\Server\IoServer($httpServer, $socket, $this->loop);
 		$server->run();
 	}
 
