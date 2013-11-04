@@ -32,9 +32,9 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 
 
 	/**
-	 * @var \SplObjectStorage
+	 * @var Connection[]
 	 */
-	protected $clients;
+	protected $clients = array();
 
 
 	/**
@@ -42,7 +42,7 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 	 */
 	public function __construct()
 	{
-		$this->clients = new \SplObjectStorage;
+		$this->clients = array();
 	}
 
 
@@ -52,8 +52,13 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 	 */
 	public function addClient(ConnectionInterface $client)
 	{
-		$this->onOpen($client);
-		$this->clients->attach($client);
+		$hash = spl_object_hash($client);
+
+		if (!isset($this->clients[$hash])) {
+			$this->clients[$hash] = new Connection($client);
+			$this->onOpen($client);
+		}
+
 		return $this;
 	}
 
@@ -64,14 +69,19 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 	 */
 	public function removeClient(ConnectionInterface $client)
 	{
-		$this->onClose($client);
-		$this->clients->detach($client);
+		$hash = spl_object_hash($client);
+
+		if (isset($this->clients[$hash])) {
+			$this->onClose($client);
+			unset($this->clients[$hash]);
+		}
+
 		return $this;
 	}
 
 
 	/**
-	 * @return \SplObjectStorage|\Traversable
+	 * @return Connection[]
 	 */
 	public function getIterator()
 	{
@@ -85,11 +95,8 @@ class ConnectionStorage extends \Nette\Object implements \IteratorAggregate {
 	 */
 	public function sendAll(IResponse $response)
 	{
-		$res = $response->create();
-
 		foreach ($this->clients as $client) {
-			/** @var ConnectionInterface $client */
-			$client->send($res);
+			$client->send($response);
 		}
 	}
 
